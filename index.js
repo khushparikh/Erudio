@@ -54,6 +54,10 @@ app.get('/', async(req, res) => {
     res.render('home')
 })  
 
+app.get('/login', async(req, res) => {
+    res.render('login')
+})
+
 app.get('/studentRegister', async(req, res) =>{
     if(!req.session.user_id){
         res.render('studentLogin')
