@@ -80,6 +80,155 @@ app.post("/studentLogin", async (req, res) => {
   }
 });
 
+app.post("studentLogin", async (req, res) => {
+  const {
+    username,
+    password,
+    studentName,
+    townLocation,
+    zipCode,
+    grade,
+    email,
+  } = req.body;
+  const hash = await bcrypt.hash(password, 12);
+  const notValidUser = await Student.findOne({ username });
+  if (notValidUser) {
+    res.redirect("/studentLogin");
+  } else {
+    const {
+      Algebra1,
+      Geometry,
+      Physics,
+      Chemistry,
+      Algebra2,
+      PreCalculus,
+      English,
+      APEnglish,
+      Art,
+      Music,
+      BusinessElectives,
+      ComputerScience,
+      APCalculus,
+    } = req.body;
+    const userSubjects = [];
+    const subjects = [
+      "Algebra 1",
+      "Geometry",
+      "Physics",
+      "Chemistry",
+      "Algebra 2",
+      "Pre-Calculus",
+      "English",
+      "AP English",
+      "Art",
+      "Music",
+      "Business Electives",
+      "Computer Science",
+      "AP Calculus",
+    ];
+    for (let subject of subjects) {
+      if (subject) {
+        userSubjects.push(subject);
+      }
+    }
+
+    const geoData = await geocoder
+      .forwardGeocode({
+        query: req.body.zipCode,
+        limit: 1,
+      })
+      .send();
+    console.log(geoData);
+    var longLat = geoData.body.features[0].geometry.coordinates;
+    console.log(longLat);
+
+    const reverseData = await geocoder
+      .reverseGeocode({
+        query: geoData.body.features[0].geometry.coordinates,
+      })
+      .send();
+    console.log(reverseData);
+
+    var place = reverseData.body.features[1].place_name;
+
+    count = place.indexOf(", United States");
+
+    place = place.substring(0, count);
+
+    const newStudent = new Student({
+      username,
+      password: hash,
+      orgName,
+      townLocation: place,
+      forwardGeocode: longLat,
+      zipCode,
+      subjects: userSubjects,
+      phoneNum,
+      description,
+    });
+    await newStudent.save();
+    console.log(newStudent);
+    req.session.user_id = newStudent._id;
+    res.redirect("/studentProfilePage");
+  }
+});
+
+// Parent Routes
+
+// login get from VTindex.js
+app.get("/login", (req, res) => {
+  if (!req.session.user_id) {
+    res.render("filler");
+  } else {
+    res.redirect("/home");
+  }
+});
+
+// login post
+app.post("/login", async (req, response) => {
+  const { username, password, id } = req.body;
+  const user = await Profile.findOne({ parentName });
+  if (user) {
+    console.log(user.password);
+    // idk if this works
+    bcrypt.compare(password, user.password, function (err, res) {
+      if (err) {
+        throw err;
+      } else if (res) {
+        response.redirect("/profile");
+      }
+    });
+  } else {
+    response.redirect("/login");
+  }
+});
+
+// login post from VTindex.js
+app.post("/login", async (req, res) => {
+  const { username, password, id } = req.body;
+  const user = await Profile.findOne({ username });
+  if (user) {
+    console.log(user.password);
+    const correctPassword = await bcrypt.compare(password, user.password);
+    if (validPassword) {
+      req.session.user_id = user._id;
+      res.redirect("/profilePage");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+
+// profile get from VTindex.js
+app.get("/profilePage", requireLogin, async (req, res) => {
+  const foundUser = await Profile.findById(req.session.user_id);
+  if (!foundUser) {
+    res.redirect("/home");
+  } else {
+    res.render("filler");
+  }
+});
+
 //Register
 app.get("/studentRegister", async (req, res) => {
   if (!req.session.user_id) {
