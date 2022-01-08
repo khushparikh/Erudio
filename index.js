@@ -80,7 +80,7 @@ app.post("/studentLogin", async (req, res) => {
   }
 });
 
-app.post("studentLogin", async (req, res) => {
+app.post("studentRegister", async (req, res) => {
   const {
     username,
     password,
@@ -93,7 +93,7 @@ app.post("studentLogin", async (req, res) => {
   const hash = await bcrypt.hash(password, 12);
   const notValidUser = await Student.findOne({ username });
   if (notValidUser) {
-    res.redirect("/studentLogin");
+    res.redirect("/studentRegister");
   } else {
     const {
       Algebra1,
@@ -235,99 +235,6 @@ app.get("/studentRegister", async (req, res) => {
     res.render("studentLogin");
   } else {
     res.render("home", subjectList);
-  }
-});
-
-app.post("studentRegister", async (req, res) => {
-  const {
-    username,
-    password,
-    studentName,
-    townLocation,
-    zipCode,
-    grade,
-    email,
-  } = req.body;
-  const hash = await bcrypt.hash(password, 12);
-  const notValidUser = await Student.findOne({ username });
-  if (notValidUser) {
-    res.redirect("/studentRegister");
-  } else {
-    const {
-      Algebra1,
-      Geometry,
-      Physics,
-      Chemistry,
-      Algebra2,
-      PreCalculus,
-      English,
-      APEnglish,
-      Art,
-      Music,
-      BusinessElectives,
-      ComputerScience,
-      APCalculus,
-    } = req.body;
-    const userSubjects = [];
-    const subjects = [
-      "Algebra 1",
-      "Geometry",
-      "Physics",
-      "Chemistry",
-      "Algebra 2",
-      "Pre-Calculus",
-      "English",
-      "AP English",
-      "Art",
-      "Music",
-      "Business Electives",
-      "Computer Science",
-      "AP Calculus",
-    ];
-    for (let subject of subjects) {
-      if (subject) {
-        userSubjects.push(subject);
-      }
-    }
-
-    const geoData = await geocoder
-      .forwardGeocode({
-        query: req.body.zipCode,
-        limit: 1,
-      })
-      .send();
-    console.log(geoData);
-    var longLat = geoData.body.features[0].geometry.coordinates;
-    console.log(longLat);
-
-    const reverseData = await geocoder
-      .reverseGeocode({
-        query: geoData.body.features[0].geometry.coordinates,
-      })
-      .send();
-    console.log(reverseData);
-
-    var place = reverseData.body.features[1].place_name;
-
-    count = place.indexOf(", United States");
-
-    place = place.substring(0, count);
-
-    const newStudent = new Student({
-      username,
-      password: hash,
-      orgName,
-      townLocation: place,
-      forwardGeocode: longLat,
-      zipCode,
-      subjects: userSubjects,
-      phoneNum,
-      description,
-    });
-    await newStudent.save();
-    console.log(newStudent);
-    req.session.user_id = newStudent._id;
-    res.redirect("/studentProfilePage");
   }
 });
 
