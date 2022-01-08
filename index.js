@@ -76,9 +76,10 @@ app.get("/tutorLogin", async (req, res) => {
 });
 
 app.get("/parentLogin", async (req, res) => {
-  res.render("parent/tutorLogin");
+  res.render("login/parentLogin");
 });
 
+// student log in and register routes
 app.post("/studentLogin", async (req, res) => {
   const { username, password, id } = req.body;
   const user = await Student.findOne({ username });
@@ -183,19 +184,10 @@ app.post("/studentRegister", async (req, res) => {
 });
 
 // Parent Routes
-// login get from VTindex.js
-app.get("/parentLogin", (req, res) => {
-  if (!req.session.user_id) {
-    res.render("filler");
-  } else {
-    res.redirect("/");
-  }
-});
-
 // login post
 app.post("/parentLogin", async (req, response) => {
   const { username, password, id } = req.body;
-  const user = await Profile.findOne({ parentName });
+  const user = await Parent.findOne({ parentName });
   if (user) {
     console.log(user.password);
     // idk if this works
@@ -203,7 +195,7 @@ app.post("/parentLogin", async (req, response) => {
       if (err) {
         throw err;
       } else if (res) {
-        response.redirect("/profile");
+        response.redirect("/parentProfilePage");
       }
     });
   } else {
@@ -211,31 +203,23 @@ app.post("/parentLogin", async (req, response) => {
   }
 });
 
-// login post from VTindex.js
-// app.post("/parentLogin", async (req, res) => {
-//   const { username, password, id } = req.body;
-//   const user = await Profile.findOne({ username });
-//   if (user) {
-//     console.log(user.password);
-//     const correctPassword = await bcrypt.compare(password, user.password);
-//     if (validPassword) {
-//       req.session.user_id = user._id;
-//       res.redirect("/profilePage");
-//     }
-//   } else {
-//     res.redirect("login/parentLogin");
-//   }
-// });
-
-// profile get from VTindex.js
-app.get("/profilePage", requireLogin, async (req, res) => {
-  const foundUser = await Profile.findById(req.session.user_id);
+// profile get
+app.get("/parentProfilePage", requireLogin, async (req, res) => {
+  const foundUser = await Parent.findById(req.session.user_id);
   if (!foundUser) {
-    res.redirect("/home");
+    res.redirect("/");
   } else {
-    res.render("filler");
+    res.render("parentProfile");
   }
 });
+
+// signup pages
+app.get("/parentRegister", async (req, res) => {
+    res.render("parentRegister")
+})
+app.post("/parentRegister", async (req, res) =>{
+    res.redirect("parentProfile")
+})
 
 //Register
 app.get("/studentRegister", async (req, res) => {
@@ -245,6 +229,17 @@ app.get("/studentRegister", async (req, res) => {
     res.render("home", subjectList);
   }
 });
+
+app.get("/parentRegister", async (req, res) => {
+    if (!req.session.user_id) {
+        res.render("parentLogin");
+    } 
+    else {
+        res.render("home");
+    }
+})
+
+
 
 app.listen(3000, () => {
   console.log("LISTENING ON PORT 3000");
