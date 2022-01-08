@@ -11,6 +11,7 @@ const studentSchema = new mongoose.Schema({
   },
   studentName: String,
   grade: String,
+  phoneNum: Number,
   townLocation: String,
   pastTutors: Array,
   potentialTutors: Array,
@@ -19,6 +20,7 @@ const studentSchema = new mongoose.Schema({
   subjects: Array,
   totalHours: String,
   email: String,
+  school: String,
 });
 
 const studentProfile = mongoose.model("studentProfile", studentSchema);
