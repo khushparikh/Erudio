@@ -122,6 +122,68 @@ app.post('studentLogin', async(req, res) =>{
 
 
 
+// Parent Routes
+
+// login get from VTindex.js
+app.get('/login', (req, res) => {
+    if(!req.session.user_id){
+        res.render('filler')
+    }
+    else{
+        res.redirect('/home')
+    }
+})
+
+// login post
+app.post('/login', async (req, response) => {
+    const {username, password, id} = req.body;
+    const user = await Profile.findOne({parentName});
+    if (user){
+        console.log(user.password);
+        // idk if this works
+        bcrypt.compare(password, user.password, function(err, res) {
+            if (err){
+                throw err;
+            }
+            else if (res){
+                response.redirect('/profile');
+            }
+        })
+    }
+    else {
+        response.redirect('/login');
+    }
+})
+
+
+// login post from VTindex.js
+app.post('/login', async (req, res) => {
+    const {username, password, id} = req.body;
+    const user = await Profile.findOne({username});
+    if (user){
+        console.log(user.password);
+        const correctPassword = await bcrypt.compare(password, user.password);
+        if(validPassword){
+            req.session.user_id = user._id;
+            res.redirect('/profilePage');
+        }
+    }
+    else {
+        res.redirect('/login');
+    }
+})
+
+// profile get from VTindex.js 
+app.get('/profilePage', requireLogin, async(req, res) => {
+    const foundUser = await Profile.findById(req.session.user_id);
+    if(!foundUser){
+        res.redirect('/home')
+    }
+    else{
+        res.render('filler')
+    }
+})
+
 
 
 
