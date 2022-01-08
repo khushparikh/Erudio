@@ -27,7 +27,7 @@ const requireLogin = (req, res, next) => {
   }
 };
 
-mongoose.connect("mongodb://localhost:27017/erudio", {
+mongoose.connect("mongodb://localhost:27017/Erudio", {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -81,7 +81,7 @@ app.get("/parentLogin", async (req, res) => {
 
 app.post("/studentLogin", async (req, res) => {
   const { username, password, id } = req.body;
-  const user = await Student.findOne(username);
+  const user = await Student.findOne({ username });
   if (!user) {
     res.redirect("login");
   } else {
@@ -108,7 +108,9 @@ app.post("/studentRegister", async (req, res) => {
     townLocation,
     zipCode,
     grade,
+    phoneNum,
     email,
+    school,
   } = req.body;
   const hash = await bcrypt.hash(password, 12);
   const notValidUser = await Student.findOne({ username });
@@ -163,14 +165,16 @@ app.post("/studentRegister", async (req, res) => {
     const newStudent = new Student({
       username,
       password: hash,
-      orgName,
+      grade,
+      studentName,
       townLocation: place,
-      forwardGeocode: longLat,
+      forwardGeoCode: longLat,
       zipCode,
-      subjects: userSubjects,
       phoneNum,
-      description,
+      email,
+      school,
     });
+
     await newStudent.save();
     console.log(newStudent);
     req.session.user_id = newStudent._id;
