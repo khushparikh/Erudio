@@ -9,7 +9,7 @@
    border-radius: 20px;
    border-spacing: 10px;
    background-color: #a1d1e8ff;
-   border-style:ridge;
+   border-style: ridge;
 }
 
 button{
@@ -21,4 +21,16 @@ label{
    color: black;
    font-weight: bold;
    text-decoration: underline;
+}
+
+h1{
+   padding: 10px;
+   align-items: center;
+}
+
+nav{
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   position: sticky;
 }
