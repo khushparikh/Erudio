@@ -12,6 +12,14 @@
    border-style: ridge;
 }
 
+html{
+   margin: 2%;
+}
+
+h1{
+   text-align: center;
+}
+
 button{
    color: #44addeff;
    background-color: white;
@@ -23,14 +31,9 @@ label{
    text-decoration: underline;
 }
 
-h1{
-   padding: 10px;
-   align-items: center;
-}
-
-nav{
+ul{
    display: flex;
    flex-direction: row;
-   flex-wrap: nowrap;
-   position: sticky;
+   justify-content: space-around;
+   align-self: center;
 }
