@@ -97,6 +97,23 @@ app.post("/studentLogin", async (req, res) => {
   }
 });
 
+app.post("/parentLogin", async (req, response) => {
+  const { username, password, id } = req.body;
+  const user = await Parent.findOne({ parentName });
+  if (user) {
+    console.log(user.password);
+    bcrypt.compare(password, user.password, function (err, res) {
+      if (err) {
+        throw err;
+      } else if (res) {
+        response.redirect("/parentProfilePage");
+      }
+    });
+  } else {
+    response.redirect("login/parentLogin");
+  }
+});
+
 //Register Routes
 app.get("/studentRegister", async (req, res) => {
   if (!req.session.user_id) {
@@ -200,35 +217,19 @@ app.post("/studentRegister", async (req, res) => {
   }
 });
 
-// Parent Routes
-// login post
-app.post("/parentLogin", async (req, response) => {
-  const { username, password, id } = req.body;
-  const user = await Parent.findOne({ parentName });
-  if (user) {
-    console.log(user.password);
-    // idk if this works
-    bcrypt.compare(password, user.password, function (err, res) {
-      if (err) {
-        throw err;
-      } else if (res) {
-        response.redirect("/parentProfilePage");
-      }
-    });
-  } else {
-    response.redirect("login/parentLogin");
-  }
-});
 
 // Profiles Routes
-app.get("/parentProfile", requireLogin, async (req, res) => {
+app.get('/parentProfile', requireLogin, async (req, res) => {
   const foundUser = await Parent.findById(req.session.user_id);
   if (!foundUser) {
     res.redirect("/");
   } else {
-    res.render("profiles/parentProfile");
+    res.render('parentProfile.ejs', { foundUser, subjectList });
   }
 });
+
+app.post('/parentProfile', )
+
 
 app.listen(3000, () => {
   console.log("LISTENING ON PORT 3000");
