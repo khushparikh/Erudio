@@ -97,10 +97,6 @@ app.post("/studentLogin", async (req, res) => {
   }
 });
 
-app.get("/studentRegister", async (req, res) => {
-  res.render("register/studentRegister", subjectList);
-});
-
 app.post("/studentRegister", async (req, res) => {
   const {
     username,
@@ -116,7 +112,7 @@ app.post("/studentRegister", async (req, res) => {
   const hash = await bcrypt.hash(password, 12);
   const notValidUser = await Student.findOne({ username });
   if (notValidUser) {
-    res.redirect("/studentRegister");
+    res.redirect("register/studentRegister");
   } else {
     const {
       Algebra1,
@@ -213,33 +209,26 @@ app.get("/parentProfilePage", requireLogin, async (req, res) => {
   }
 });
 
-// signup pages
-app.get("/parentRegister", async (req, res) => {
-    res.render("parentRegister")
-})
-app.post("/parentRegister", async (req, res) =>{
-    res.redirect("parentProfile")
-})
-
-//Register
+//Register Routes
 app.get("/studentRegister", async (req, res) => {
   if (!req.session.user_id) {
-    res.render("studentLogin");
+    res.render("login/studentLogin");
   } else {
-    res.render("home", subjectList);
+    res.render("register/studentRegister", subjectList);
   }
 });
 
+app.post("/parentRegister", async (req, res) => {
+  res.redirect("parentProfile");
+});
+
 app.get("/parentRegister", async (req, res) => {
-    if (!req.session.user_id) {
-        res.render("parentLogin");
-    } 
-    else {
-        res.render("home");
-    }
-})
-
-
+  if (!req.session.user_id) {
+    res.render("login/parentLogin");
+  } else {
+    res.render("register/parentRegister");
+  }
+});
 
 app.listen(3000, () => {
   console.log("LISTENING ON PORT 3000");
