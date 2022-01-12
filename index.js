@@ -132,6 +132,7 @@ app.get("/parentRegister", async (req, res) => {
 });
 
 app.post("/parentRegister", async (req, res) => {
+  // why does grade exist for parents
   const {
     username,
     password,
@@ -149,9 +150,6 @@ app.post("/parentRegister", async (req, res) => {
   )
   if (notValidUser) {
     res.redirect("register/parentRegister")
-  }
-  else {
-    // fill this later
   }
 
   // copied from student register
@@ -190,10 +188,10 @@ app.post("/parentRegister", async (req, res) => {
       email,
     });
 
-    await newStudent.save();
-    console.log(newStudent);
-    req.session.user_id = newStudent._id;
-    res.redirect("/studentProfilePage");
+    await newParent.save();
+    console.log(newParent);
+    req.session.user_id = newParent._id;
+    res.redirect("/parentProfile");
 
 });
 
@@ -290,7 +288,10 @@ app.get('/parentProfile', requireLogin, async (req, res) => {
   }
 });
 
-app.post('/parentProfile', )
+app.post('/parentProfile', async (req, res) => {
+  // fill this later?
+  // access student pages somehow
+})
 
 
 app.listen(3000, () => {
