@@ -1,40 +1,65 @@
-//register page
-//perhaps will make a partial for the register page and add individual characterstics of each page
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <link rel="stylesheet" href="/css/registrationstyle.css">
+    <link rel="stylesheet" href = "/css/bootstrap.min.css">
+    <script src="/js/bootstrap.min.js"></script>
+    <title>studentRegistration</title>
 </head>
 <body>
-    <h1>Sign Up</h1>
-    <form action='/studentRegister' method='POST'>
-        <label for='username'>Username</label>
-        <input type='text' name='username' placeholder=username id='username'>
-        
-        <label for='password'>Password</label>
-        <input type='text' name='password' placeholder=password id='password'>
-        
-        <label for='studentName'>Student Name</label>
-        <input type='text' name='studentName' placeholder=student-name id='studentName'>
-
-        <label for='email'>Email</label>
-        <input type='text' name='email' placeholder=email id='email'>
-        
-        <label for='phoneNum'>Phone Number</label>
-        <input type='number' name='phoneNum' placeholder=phone-number id='phoneNum'>
-        
-        <label for='grade'>Grade Level</label>
-        <input type='number' name='grade' placeholder=grade id='grade'>
-
-        <label for='school'>School</label>
-        <input type='text' name='school' placeholder=school id='school'>
-
-        <label for='zipCode'>Zip Code</label>
-        <input type='text' name='zipCode' placeholder=zip-code id='zipCode'>
-        <button>Sign Up</button>
-    </form>
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h1">ERUDIO!</h1>
+                    <p color='white'>student Registration</p>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Choose a username" name="username" id="username">    
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Choose a password" name="password" id="password">
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="What is your student's name" name="studentName" id="studentName">
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Enter your email" name="email" id="email">
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Enter your phone Number" name="phoneNum" id="phoneNum">
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Child's grade level" name="grade" id="grade">
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Child's school" name="school" id="school">
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" placeholder="Enter your zip Code" name="zipCode" id="zipCode">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Login" class="btn float-right login_btn">
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links">
+                        Already have an account?<a href="#">Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

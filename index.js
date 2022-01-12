@@ -67,6 +67,7 @@ app.get("/", async (req, res) => {
   res.render("home");
 });
 
+//Login Routes
 app.get("/studentLogin", async (req, res) => {
   res.render("login/studentLogin");
 });
@@ -79,7 +80,6 @@ app.get("/parentLogin", async (req, res) => {
   res.render("login/parentLogin");
 });
 
-// student log in and register routes
 app.post("/studentLogin", async (req, res) => {
   const { username, password, id } = req.body;
   const user = await Student.findOne({ username });
@@ -97,8 +97,25 @@ app.post("/studentLogin", async (req, res) => {
   }
 });
 
+//Register Routes
 app.get("/studentRegister", async (req, res) => {
-  res.render("register/studentRegister", subjectList);
+  if (!req.session.user_id) {
+    res.render("login/studentLogin");
+  } else {
+    res.render("register/studentRegister", subjectList);
+  }
+});
+
+app.get("/parentRegister", async (req, res) => {
+  if (!req.session.user_id) {
+    res.render("login/parentLogin");
+  } else {
+    res.render("register/parentRegister");
+  }
+});
+
+app.post("/parentRegister", async (req, res) => {
+  res.redirect("parentProfile");
 });
 
 app.post("/studentRegister", async (req, res) => {
@@ -116,7 +133,7 @@ app.post("/studentRegister", async (req, res) => {
   const hash = await bcrypt.hash(password, 12);
   const notValidUser = await Student.findOne({ username });
   if (notValidUser) {
-    res.redirect("/studentRegister");
+    res.redirect("register/studentRegister");
   } else {
     const {
       Algebra1,
@@ -203,43 +220,15 @@ app.post("/parentLogin", async (req, response) => {
   }
 });
 
-// profile get
-app.get("/parentProfilePage", requireLogin, async (req, res) => {
+// Profiles Routes
+app.get("/parentProfile", requireLogin, async (req, res) => {
   const foundUser = await Parent.findById(req.session.user_id);
   if (!foundUser) {
     res.redirect("/");
   } else {
-    res.render("parentProfile");
+    res.render("profiles/parentProfile");
   }
 });
-
-// signup pages
-app.get("/parentRegister", async (req, res) => {
-    res.render("parentRegister")
-})
-app.post("/parentRegister", async (req, res) =>{
-    res.redirect("parentProfile")
-})
-
-//Register
-app.get("/studentRegister", async (req, res) => {
-  if (!req.session.user_id) {
-    res.render("studentLogin");
-  } else {
-    res.render("home", subjectList);
-  }
-});
-
-app.get("/parentRegister", async (req, res) => {
-    if (!req.session.user_id) {
-        res.render("parentLogin");
-    } 
-    else {
-        res.render("home");
-    }
-})
-
-
 
 app.listen(3000, () => {
   console.log("LISTENING ON PORT 3000");
