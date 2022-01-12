@@ -10,7 +10,6 @@ const parentSchema = new mongoose.Schema({
     required: [true, "Password cannot be blank"],
   },
   parentName: String,
-  grade: String,
   phoneNum: Number,
   townLocation: String,
   forwardGeocode: Array,
