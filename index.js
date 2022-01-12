@@ -132,7 +132,69 @@ app.get("/parentRegister", async (req, res) => {
 });
 
 app.post("/parentRegister", async (req, res) => {
-  res.redirect("parentProfile");
+  const {
+    username,
+    password,
+    parentName,
+    grade,
+    phoneNum,
+    townLocation,
+    zipCode,
+    email,
+  } = req.body;
+  const hash = await bcrypt.hash(password, 12)
+  const notValidUser = await Parent.findOne(
+    { parentName },
+    { townLocation },
+  )
+  if (notValidUser) {
+    res.redirect("register/parentRegister")
+  }
+  else {
+    // fill this later
+  }
+
+  // copied from student register
+  const geoData = await geocoder
+      .forwardGeocode({
+        query: req.body.zipCode,
+        limit: 1,
+      })
+      .send();
+    console.log(geoData);
+    var longLat = geoData.body.features[0].geometry.coordinates;
+    console.log(longLat);
+
+    const reverseData = await geocoder
+      .reverseGeocode({
+        query: geoData.body.features[0].geometry.coordinates,
+      })
+      .send();
+    console.log(reverseData);
+
+    var place = reverseData.body.features[1].place_name;
+
+    count = place.indexOf(", United States");
+
+    place = place.substring(0, count);
+
+    const newParent = new Parent({
+      username,
+      password: hash,
+      parentName,
+      grade,
+      phoneNum: place,
+      forwardGeoCode: longLat,
+      zipCode,
+      phoneNum,
+      email,
+    });
+
+    await newStudent.save();
+    console.log(newStudent);
+    req.session.user_id = newStudent._id;
+    res.redirect("/studentProfilePage");
+
 });
 
 app.post("/studentRegister", async (req, res) => {
