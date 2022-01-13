@@ -116,18 +116,20 @@ app.post("/parentLogin", async (req, response) => {
 
 //Register Routes
 app.get("/studentRegister", async (req, res) => {
+  // 6:18 PM 1/12: Updated the logic for redirecting to the correct page--> when no session, then redirect to the register, otherwise redirect to the homepage
   if (!req.session.user_id) {
-    res.render("login/studentLogin");
+    res.render("register/parentRegister", subjectList);
   } else {
-    res.render("register/studentRegister", subjectList);
+    res.redirect("/");
   }
 });
 
 app.get("/parentRegister", async (req, res) => {
+  // 6:18 PM 1/12: Updated the logic for redirecting to the correct page--> when no session, then redirect to the register, otherwise redirect to the homepage
   if (!req.session.user_id) {
-    res.render("login/parentLogin");
-  } else {
     res.render("register/parentRegister");
+  } else {
+    res.redirect("/");
   }
 });
 
@@ -137,12 +139,13 @@ app.post("/parentRegister", async (req, res) => {
     username,
     password,
     parentName,
-    grade,
     phoneNum,
     townLocation,
     zipCode,
     email,
   } = req.body;
+
+  console.log(req.body);
   const hash = await bcrypt.hash(password, 12)
   const notValidUser = await Parent.findOne(
     { parentName },
@@ -291,6 +294,18 @@ app.get('/parentProfile', requireLogin, async (req, res) => {
 app.post('/parentProfile', async (req, res) => {
   // fill this later?
   // access student pages somehow
+})
+
+app.get('/linkStudent', async(req, res) => {
+  if(!req.session.user_id) {
+    res.redirect('/')
+  } else {
+    res.render('linkStudent.ejs')
+  }
+})
+
+app.post('/linkStudent', async(req, res) => {
+
 })
 
 
