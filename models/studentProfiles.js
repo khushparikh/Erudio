@@ -21,6 +21,9 @@ const studentSchema = new mongoose.Schema({
   totalHours: String,
   email: String,
   school: String,
+  requestedParent: Array,
+  confirmedParent: Array
+
 });
 
 const studentProfile = mongoose.model("studentProfile", studentSchema);
