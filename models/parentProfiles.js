@@ -15,6 +15,9 @@ const parentSchema = new mongoose.Schema({
   forwardGeocode: Array,
   zipCode: String,
   email: String,
+  requestedStudent: Array,
+  confirmedStudent: Array
+
 });
 
 const parentProfile = mongoose.model("parentProfile", parentSchema);
