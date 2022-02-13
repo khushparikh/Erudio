@@ -82,17 +82,18 @@ app.get("/parentLogin", async (req, res) => {
 
 app.post("/studentLogin", async (req, res) => {
   const { username, password, id } = req.body;
-  const user = await Student.findOne({ username });
+  const user = await Student.findOne({ id });
+
   if (!user) {
-    res.redirect("login");
+    res.redirect("/studentLogin");
   } else {
-    console.log(user.password);
     const validPassword = await bcrypt.compare(password, user.password);
+    console.log(validPassword)
     if (validPassword) {
       req.session.user_id = user._id;
-      res.redirect("/StudentProfilePage");
+      res.redirect("/studentProfilePage");
     } else {
-      res.redirect("login/studentLogin");
+      res.redirect("/home");
     }
   }
 });
@@ -118,7 +119,7 @@ app.post("/parentLogin", async (req, response) => {
 app.get("/studentRegister", async (req, res) => {
   // 6:18 PM 1/12: Updated the logic for redirecting to the correct page--> when no session, then redirect to the register, otherwise redirect to the homepage
   if (!req.session.user_id) {
-    res.render("register/parentRegister", subjectList);
+    res.render("register/studentRegister", subjectList);
   } else {
     res.redirect("/");
   }
@@ -203,7 +204,6 @@ app.post("/studentRegister", async (req, res) => {
     username,
     password,
     studentName,
-    townLocation,
     zipCode,
     grade,
     phoneNum,
@@ -294,6 +294,17 @@ app.get('/parentProfile', requireLogin, async (req, res) => {
 app.post('/parentProfile', async (req, res) => {
   // fill this later?
   // access student pages somehow
+})
+
+
+app.get('/studentProfilePage', requireLogin, async(req, res) => {
+  const foundUser = await Student.findById(req.session.user_id);
+    if(!foundUser){
+        res.redirect('/studentLogin')
+    }
+    else{
+        res.render('profiles/studentProfile.ejs', {foundUser})
+    }
 })
 
 app.get('/linkStudent', async(req, res) => {
