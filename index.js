@@ -135,7 +135,6 @@ app.get("/parentRegister", async (req, res) => {
 });
 
 app.post("/parentRegister", async (req, res) => {
-  // why does grade exist for parents
   const {
     username,
     password,
@@ -184,11 +183,10 @@ app.post("/parentRegister", async (req, res) => {
       username,
       password: hash,
       parentName,
-      grade,
-      phoneNum: place,
+      phoneNum,
+      townLocation: place,
       forwardGeoCode: longLat,
       zipCode,
-      phoneNum,
       email,
     });
 
@@ -291,12 +289,6 @@ app.get('/parentProfile', requireLogin, async (req, res) => {
   }
 });
 
-app.post('/parentProfile', async (req, res) => {
-  // fill this later?
-  // access student pages somehow
-})
-
-
 app.get('/studentProfilePage', requireLogin, async(req, res) => {
   const foundUser = await Student.findById(req.session.user_id);
     if(!foundUser){
@@ -316,7 +308,22 @@ app.get('/linkStudent', async(req, res) => {
 })
 
 app.post('/linkStudent', async(req, res) => {
+  
+  const {studentId} = req.body;
 
+  const parent = [];
+  
+  parent.push(req.session.user_id);
+
+  const requestedStudent = await Student.findByIdAndUpdate(studentId, req.body, {runValidators: true, new: true});
+    requestedStudent.requestedParent = parent;
+    await requestedStudent.save(); 
+  
+  console.log(requestedStudent);
+})
+
+app.get('/studentLink', async(req, res) => {
+  
 })
 
 

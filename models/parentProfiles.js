@@ -11,6 +11,8 @@ const parentSchema = new mongoose.Schema({
   },
   parentName: String,
   phoneNum: Number,
+  requestedStudent: Array,
+  confirmedStudent: Array,
   townLocation: String,
   forwardGeocode: Array,
   zipCode: String,
