@@ -139,17 +139,15 @@ app.post("/parentRegister", async (req, res) => {
     username,
     password,
     parentName,
-    phoneNum,
-    townLocation,
     zipCode,
+    phoneNum,
     email,
   } = req.body;
 
   console.log(req.body);
   const hash = await bcrypt.hash(password, 12)
   const notValidUser = await Parent.findOne(
-    { parentName },
-    { townLocation },
+    { parentName }
   )
   if (notValidUser) {
     res.redirect("register/parentRegister")
@@ -300,22 +298,19 @@ app.get('/studentProfilePage', requireLogin, async(req, res) => {
 })
 
 app.get('/linkStudent', async(req, res) => {
-  if(!req.session.user_id) {
-    res.redirect('/')
-  } else {
-    res.render('linkStudent.ejs')
-  }
+  
+    res.render('studentLink/linkStudent.ejs')
 })
 
 app.post('/linkStudent', async(req, res) => {
   
-  const {studentId} = req.body;
+  const {studentLink} = req.body;
+  console.log(req.body)
 
-  const parent = [];
-  
-  parent.push(req.session.user_id);
 
-  const requestedStudent = await Student.findByIdAndUpdate(studentId, req.body, {runValidators: true, new: true});
+  const requestedStudent = await Student.findByIdAndUpdate(studentLink, req.body, {runValidators: true, new: true});
+    const parent = requestedStudent.requestedParent;
+    parent.push(req.session.user_id);
     requestedStudent.requestedParent = parent;
     await requestedStudent.save(); 
   
