@@ -24,7 +24,7 @@ const geocoder = mbxGeocoding({ accessToken: mapBoxToken})
 
 const requireLogin = (req, res, next) => {
     if(!req.session.user_id){
-        res.redirect('/home')
+        res.redirect('/')
     }
     else{
         next();
@@ -89,7 +89,7 @@ app.get('/match', requireLogin, async(req, res) => {
     // Beginning of Location Matching
 
     if(!foundUser){
-        res.redirect("/home")
+        res.redirect("/")
     }
     else{
         const positions = await Position.find({})
@@ -208,7 +208,7 @@ app.get('/yourPosition/:id', requireLogin, async(req, res) => {
         res.render('showYourPosition.ejs', {foundPosition, foundUser})
     }
     else{
-        res.redirect('/home');
+        res.redirect('/');
     }
 })  
 
@@ -217,7 +217,7 @@ app.get('/orgRegister', async(req, res) => {
         res.render('orgRegister.ejs', {categories2})
     }
     else{
-        res.redirect('/home')
+        res.redirect('/')
     }
 })
 
@@ -230,7 +230,7 @@ app.get('/register', async(req, res) => {
         res.render('register', {categories2}, req.session.user_id)
     }
     else{
-        res.redirect('/home')   
+        res.redirect('/')   
     }
 
 
@@ -301,7 +301,7 @@ app.post('/orgRegister', async (req, res) => {
 app.get('/orgProfilePage', requireLogin, async(req, res) => {
     const foundUser = await orgProfile.findById(req.session.user_id);
     if(!foundUser){
-        res.redirect('/home')
+        res.redirect('/')
     }
     else{
         res.render('orgProfilePage.ejs', {foundUser, categories1, categories2})
@@ -311,7 +311,7 @@ app.get('/orgProfilePage', requireLogin, async(req, res) => {
 app.get('/profilePage', requireLogin, async(req, res) => {
     const foundUser = await Profile.findById(req.session.user_id);
     if(!foundUser){
-        res.redirect('/home')
+        res.redirect('/')
     }
     else{
         res.render('profilePage.ejs', {foundUser, categories1, categories2})
@@ -323,7 +323,7 @@ app.get('/login', (req, res) => {
         res.render('login')
     }
     else{
-        res.redirect('/home')
+        res.redirect('/')
     }
 })
 
@@ -332,7 +332,7 @@ app.get('/orgLogin', (req, res) => {
         res.render('orgLogin')
     }
     else{
-        res.redirect('/home')
+        res.redirect('/')
     }
 })
 
@@ -378,7 +378,7 @@ app.post('/orgLogin', async (req, res) => {
 
 app.post('/logout', (req, res) => {
     req.session.destroy();
-    res.redirect('/home');
+    res.redirect('/');
 })
 
 app.get('/profiles', async (req, res) => { 
@@ -531,7 +531,7 @@ app.delete('/profilePage/:id', async(req, res) => {
     const {id} = req.params;
     const deletedProfile = await Profile.findByIdAndDelete(id);
     req.session.destroy();
-    res.redirect('/home')
+    res.redirect('/')
 })
 
 
@@ -540,7 +540,7 @@ app.delete('/orgProfilePage/:id', async(req, res) => {
     const deletedProfile = await orgProfile.findByIdAndDelete(id);
     console.log(deletedProfile);
     req.session.destroy();
-    res.redirect('/home')
+    res.redirect('/')
 })
 
 app.get('/orgProfiles', async (req, res) => { 
@@ -674,7 +674,7 @@ app.delete('/positions/:id', async(req, res) => {
         res.redirect('/yourPositions')
     }
     else{
-        res.redirect('/home')
+        res.redirect('/')
     }
 })
 
