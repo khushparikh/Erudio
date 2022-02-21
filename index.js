@@ -93,14 +93,14 @@ app.post("/studentLogin", async (req, res) => {
       req.session.user_id = user._id;
       res.redirect("/studentProfilePage");
     } else {
-      res.redirect("/home");
+      res.redirect("/");
     }
   }
 });
 
 app.post("/parentLogin", async (req, response) => {
   const { username, password, id } = req.body;
-  const user = await Parent.findOne({ parentName });
+  const user = await Parent.findOne({username});
   if (user) {
     console.log(user.password);
     bcrypt.compare(password, user.password, function (err, res) {
@@ -283,7 +283,7 @@ app.get('/parentProfile', requireLogin, async (req, res) => {
   if (!foundUser) {
     res.redirect("/");
   } else {
-    res.render('parentProfile.ejs', { foundUser, subjectList });
+    res.render('parentProfile.ejs', {foundUser, subjectList});
   }
 });
 
@@ -293,7 +293,14 @@ app.get('/studentProfilePage', requireLogin, async(req, res) => {
         res.redirect('/studentLogin')
     }
     else{
-        res.render('profiles/studentProfile.ejs', {foundUser})
+
+        const parentList = [];
+        
+        for(let parentID of foundUser.requestedParent) {
+          const parent = Parent.findById(parentID)
+          parentList.push(parent)
+        }
+        res.render('profiles/studentProfile.ejs', {foundUser, parentList})
     }
 })
 

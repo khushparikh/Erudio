@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile Page</title>
 </head>
 <body>
     <h1><%= foundUser.username %></h1>
+    <h1> </h1>
+    <h1> </h1>
+    <h1> </h1>
+    <h1> </h1>
+    <h2>Parent Admin Requests:</h2>
+    <% for(let parent of parentList) { %>
+        <ul> <%= parent.parentName %> </ul>
+    <% } %>
 </body>
 </html>
